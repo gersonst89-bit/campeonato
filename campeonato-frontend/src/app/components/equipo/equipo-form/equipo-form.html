@@ -1,0 +1,44 @@
+<h1 class="page-title">{{ modoEditar ? 'Editar Equipo' : 'Nuevo Equipo' }}</h1>
+
+@if (mensaje) {
+<div class="msg-success">{{ mensaje }}</div>
+}
+@if (error) {
+<div class="msg-error">{{ error }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+    <div class="form-group">
+        <label class="form-label">Nombre del Equipo</label>
+        <input class="form-input" formControlName="nombre" type="text" placeholder="Ej: Los Tigres FC" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Representante</label>
+        <input class="form-input" formControlName="representante" type="text" placeholder="Ej: Juan Pérez" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Fecha de Creación</label>
+        <input class="form-input" formControlName="fechaCreacion" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Campeonato</label>
+        <select class="form-select" formControlName="idCampeonato">
+            <option value="">-- Selecciona un campeonato --</option>
+            @for (c of campeonatos; track c.id) {
+            <option [value]="c.id">{{ c.nombre }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ modoEditar ? 'Actualizar Equipo' : 'Registrar Equipo' }}
+        </button>
+        <a routerLink="/equipos" class="btn btn-ghost">Cancelar</a>
+    </div>
+
+</form>

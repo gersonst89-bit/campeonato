@@ -1,0 +1,64 @@
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6)">
+    <h1 class="page-title" style="margin-bottom: 0">Equipos</h1>
+    <a routerLink="/equipos/nuevo" class="btn btn-primary">+ Nuevo Equipo</a>
+</div>
+
+@if (cargando) {
+<div class="card">
+    <div class="skeleton skeleton-heading"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+</div>
+
+} @else if (equipos.length === 0) {
+<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+    <h3>Sin equipos aún</h3>
+    <p>Registra el primer equipo para asignarlo a un campeonato.</p>
+    <a routerLink="/equipos/nuevo" class="btn btn-primary">Crear equipo</a>
+</div>
+
+} @else {
+<div class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Representante</th>
+                <th>Fecha Creación</th>
+                <th>Campeonato</th> <!-- ✅ nuevo -->
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (e of equipos; track e.idEquipo) {
+            <tr>
+                <td class="muted">{{ e.idEquipo }}</td>
+                <td>{{ e.nombre }}</td>
+                <td class="muted">{{ e.representante }}</td>
+                <td class="muted">{{ e.fechaCreacion }}</td>
+                <td class="muted">{{ e.campeonato?.nombre }}</td> <!-- ✅ nuevo -->
+                <td>
+                    <div style="display: flex; gap: var(--space-2)">
+                        <a [routerLink]="['/equipos/editar', e.idEquipo]" class="btn btn-ghost btn-sm">
+                            Editar
+                        </a>
+                        <button class="btn btn-danger btn-sm" (click)="eliminar(e.idEquipo!)">
+                            Eliminar
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

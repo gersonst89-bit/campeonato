@@ -1,0 +1,67 @@
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6)">
+    <h1 class="page-title" style="margin-bottom: 0">Partidos</h1>
+    <a routerLink="/partidos/nuevo" class="btn btn-primary">+ Nuevo Partido</a>
+</div>
+
+@if (cargando) {
+<div class="card">
+    <div class="skeleton skeleton-heading"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+</div>
+
+} @else if (partidos.length === 0) {
+<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4l3 3" />
+        <path d="m4.93 4.93 14.14 14.14" />
+    </svg>
+    <h3>Sin partidos aún</h3>
+    <p>Registra el primer partido para generar la tabla de posiciones.</p>
+    <a routerLink="/partidos/nuevo" class="btn btn-primary">Registrar partido</a>
+</div>
+
+} @else {
+<div class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Local</th>
+                <th class="center">Resultado</th>
+                <th>Visitante</th>
+                <th>Fecha</th>
+                <th>Campeonato</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (p of partidos; track p.id) {
+            <tr>
+                <td class="muted">{{ p.id }}</td>
+                <td>{{ p.equipoLocalNombre }}</td>
+                <td class="center">
+                    <span class="score">{{ p.golesLocal }} – {{ p.golesVisitante }}</span>
+                </td>
+                <td>{{ p.equipoVisitanteNombre }}</td>
+                <td class="muted">{{ p.fecha | date:'dd/MM/yyyy' }}</td>
+                <td class="muted">{{ p.campeonatoNombre }}</td>
+                <td>
+                    <div style="display: flex; gap: var(--space-2)">
+                        <a [routerLink]="['/partidos/editar', p.id]" class="btn btn-ghost btn-sm">
+                            Editar
+                        </a>
+                        <button class="btn btn-danger btn-sm" (click)="eliminar(p.id!)">
+                            Eliminar
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

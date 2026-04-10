@@ -1,0 +1,80 @@
+<h1 class="page-title">{{ modoEditar ? 'Editar Partido' : 'Registrar Partido' }}</h1>
+
+@if (mensaje) {
+<div class="msg-success">{{ mensaje }}</div>
+}
+@if (error) {
+<div class="msg-error">{{ error }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+    <div class="form-group">
+        <label class="form-label">Campeonato</label>
+        <select class="form-select" formControlName="idCampeonato">
+            <option value="">-- Selecciona campeonato --</option>
+            @for (c of campeonatos; track c.id) {
+            <option [value]="c.id">{{ c.nombre }}</option>
+            }
+        </select>
+    </div>
+
+    <!-- Fila local -->
+    <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: end">
+        <div class="form-group" style="margin-bottom: 0">
+            <label class="form-label">Equipo Local</label>
+            <select class="form-select" formControlName="equipoLocalId">
+                <option value="">-- Equipo local --</option>
+                @for (e of equipos; track e.idEquipo) {
+                <option [value]="e.idEquipo">{{ e.nombre }}</option>
+                }
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; width: 90px">
+            <label class="form-label">Goles</label>
+            <input class="form-input" formControlName="golesLocal" type="number" min="0" placeholder="0" />
+        </div>
+    </div>
+
+    <!-- Separador VS -->
+    <div style="
+        text-align: center;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-lg);
+        color: var(--color-text-faint);
+        padding: var(--space-3) 0;
+        letter-spacing: 0.1em;
+    ">VS</div>
+
+    <!-- Fila visitante -->
+    <div
+        style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: end; margin-bottom: var(--space-5)">
+        <div class="form-group" style="margin-bottom: 0">
+            <label class="form-label">Equipo Visitante</label>
+            <select class="form-select" formControlName="equipoVisitanteId">
+                <option value="">-- Equipo visitante --</option>
+                @for (e of equipos; track e.idEquipo) {
+                <option [value]="e.idEquipo">{{ e.nombre }}</option>
+                }
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; width: 90px">
+            <label class="form-label">Goles</label>
+            <input class="form-input" formControlName="golesVisitante" type="number" min="0" placeholder="0" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Fecha del Partido</label>
+        <input class="form-input" formControlName="fecha" type="date" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ modoEditar ? 'Actualizar Partido' : 'Registrar Partido' }}
+        </button>
+        <a routerLink="/partidos" class="btn btn-ghost">Cancelar</a>
+    </div>
+
+</form>

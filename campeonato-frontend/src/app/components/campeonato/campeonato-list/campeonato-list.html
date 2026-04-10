@@ -1,0 +1,63 @@
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6)">
+    <h1 class="page-title" style="margin-bottom: 0">Campeonatos</h1>
+    <a routerLink="/campeonatos/nuevo" class="btn btn-primary">+ Nuevo Campeonato</a>
+</div>
+
+
+@if (cargando) {
+<div class="card">
+    <div class="skeleton skeleton-heading"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+</div>
+
+} @else if (campeonatos.length === 0) {
+<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 22h16" />
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+    </svg>
+    <h3>Sin campeonatos aún</h3>
+    <p>Crea el primer campeonato para empezar a gestionar equipos y partidos.</p>
+    <a routerLink="/campeonatos/nuevo" class="btn btn-primary">Crear campeonato</a>
+</div>
+
+} @else {
+<div class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha Inicio</th>
+                <th class="center">Cant. Equipos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (c of campeonatos; track c.id) {
+            <tr>
+                <td class="muted">{{ c.id }}</td>
+                <td>{{ c.nombre }}</td>
+                <td class="muted">{{ c.fechaInicio | date:'dd/MM/yyyy' }}</td>
+                <td class="center">{{ c.cantidadEquipos }}</td>
+                <td class="actions">
+                    <a [routerLink]="['/campeonatos/editar', c.id]" class="btn btn-sm btn-ghost">
+                        Editar
+                    </a>
+                    <button class="btn btn-sm btn-danger" (click)="eliminar(c.id!)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

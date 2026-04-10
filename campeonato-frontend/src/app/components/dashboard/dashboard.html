@@ -1,0 +1,176 @@
+<h1 class="page-title">Dashboard</h1>
+
+<!-- Selector de campeonato -->
+<div class="dashboard-selector">
+    <label class="form-label">Campeonato</label>
+    <form [formGroup]="form">
+        <select class="form-select" formControlName="idCampeonato" (change)="cargarDashboard()">
+            <option value="">-- Selecciona un campeonato --</option>
+            @for (c of campeonatos; track c.id) {
+            <option [value]="c.id">{{ c.nombre }}</option>
+            }
+        </select>
+    </form>
+</div>
+
+@if (campeonatoSeleccionado) {
+
+<!-- KPIs -->
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <p class="kpi-label">Campeonato</p>
+        <p class="kpi-value nombre">{{ campeonatoSeleccionado.nombre }}</p>
+    </div>
+    <div class="kpi-card">
+        <p class="kpi-label">Fecha de inicio</p>
+        <p class="kpi-value fecha">{{ campeonatoSeleccionado.fechaInicio | date:'dd/MM/yy' }}</p>
+    </div>
+    <div class="kpi-card">
+        <p class="kpi-label">Equipos inscritos</p>
+        <p class="kpi-value accent">{{ campeonatoSeleccionado.cantidadEquipos }}</p>
+    </div>
+    <div class="kpi-card">
+        <p class="kpi-label">Partidos jugados</p>
+        <p class="kpi-value accent">{{ partidos.length }}</p>
+    </div>
+    <div class="kpi-card">
+        <p class="kpi-label">Goles totales</p>
+        <p class="kpi-value accent">{{ totalGoles }}</p>
+    </div>
+    <div class="kpi-card">
+        <p class="kpi-label">Líder del torneo</p>
+        <p class="kpi-value nombre">{{ liderTorneo }}</p>
+    </div>
+</div>
+
+<!-- Gráfico de barras -->
+@if (tabla.length > 0) {
+<h2 class="section-title">Puntos por Equipo</h2>
+<div class="chart-wrapper">
+    <canvas #chartCanvas></canvas>
+</div>
+}
+
+<!-- Tabla de posiciones -->
+<h2 class="section-title">Tabla de Posiciones</h2>
+
+@if (cargando) {
+<div class="card">
+    <div class="skeleton skeleton-heading"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+</div>
+
+} @else if (tabla.length === 0) {
+<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+        <rect x="9" y="3" width="6" height="4" rx="1" />
+        <path d="M9 12h6M9 16h4" />
+    </svg>
+    <h3>Sin partidos aún</h3>
+    <p>Registra el primer partido para ver la tabla de posiciones.</p>
+    <a routerLink="/partidos/nuevo" class="btn btn-primary">Registrar partido</a>
+</div>
+
+} @else {
+<div class="table-wrapper" style="margin-bottom: var(--space-8)">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Equipo</th>
+                <th class="center">PJ</th>
+                <th class="center">G</th>
+                <th class="center">E</th>
+                <th class="center">P</th>
+                <th class="center">GF</th>
+                <th class="center">GC</th>
+                <th class="center">DG</th>
+                <th class="center">Pts</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (pos of tabla; track pos.idEquipo; let i = $index) {
+            <tr [class]="i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : ''">
+                <td>{{ getPosicionIcon(i) }}</td>
+                <td>{{ pos.nombreEquipo }}</td>
+                <td class="center">{{ pos.pj }}</td>
+                <td class="center">{{ pos.g }}</td>
+                <td class="center">{{ pos.e }}</td>
+                <td class="center">{{ pos.p }}</td>
+                <td class="center">{{ pos.gf }}</td>
+                <td class="center">{{ pos.gc }}</td>
+                <td class="center"
+                    [style.color]="pos.gf - pos.gc > 0 ? 'var(--color-primary)' : pos.gf - pos.gc < 0 ? 'var(--color-error)' : 'var(--color-text-muted)'">
+                    {{ pos.gf - pos.gc > 0 ? '+' : '' }}{{ pos.gf - pos.gc }}
+                </td>
+                <td class="center">
+                    <span class="pts-badge">{{ pos.pts }}</span>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+<!-- Partidos jugados -->
+<h2 class="section-title">Partidos Jugados</h2>
+
+@if (partidos.length === 0) {
+<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4l3 3" />
+    </svg>
+    <h3>Sin partidos registrados</h3>
+    <p>Aún no se han jugado partidos en este campeonato.</p>
+    <a routerLink="/partidos/nuevo" class="btn btn-primary">Registrar partido</a>
+</div>
+
+} @else {
+<div class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Local</th>
+                <th class="center">Resultado</th>
+                <th>Visitante</th>
+                <th class="muted">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (p of partidos; track p.id) {
+            <tr>
+                <td>{{ p.equipoLocalNombre }}</td>
+                <td class="center">
+                    <span class="score">{{ p.golesLocal }} – {{ p.golesVisitante }}</span>
+                </td>
+                <td>{{ p.equipoVisitanteNombre }}</td>
+                <td class="muted">{{ p.fecha | date:'dd/MM/yyyy' }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+} @else {
+<div class="empty-state">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+        aria-hidden="true">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 22h16" />
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+    </svg>
+    <h3>Selecciona un campeonato</h3>
+    <p>Elige un campeonato del selector de arriba para ver el dashboard.</p>
+</div>
+}

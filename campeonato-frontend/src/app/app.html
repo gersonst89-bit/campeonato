@@ -1,0 +1,20 @@
+<div class="app-wrapper">
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a routerLink="/dashboard" class="nav-logo">⚽ Liga Pro</a>
+            <div class="nav-links">
+                <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+                <a routerLink="/campeonatos" routerLinkActive="active">Campeonatos</a>
+                <a routerLink="/campeonatos/nuevo" routerLinkActive="active">+ Campeonato</a>
+                <a routerLink="/equipos" routerLinkActive="active">Equipos</a>
+                <a routerLink="/equipos/nuevo" routerLinkActive="active">+ Equipo</a>
+                <a routerLink="/partidos" routerLinkActive="active">Partidos</a>
+                <a routerLink="/partidos/nuevo" routerLinkActive="active">+ Partido</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <router-outlet />
+    </main>
+</div>
