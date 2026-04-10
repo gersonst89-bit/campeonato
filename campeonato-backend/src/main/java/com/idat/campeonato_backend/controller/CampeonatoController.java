@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/campeonatos")
-@CrossOrigin(origins = {"http://localhost:4200", "https://campeonato-theta.vercel.app"})
 @RequiredArgsConstructor
 public class CampeonatoController {
 
