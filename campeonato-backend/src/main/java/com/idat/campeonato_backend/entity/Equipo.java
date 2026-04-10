@@ -34,7 +34,7 @@ public class Equipo {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDate fechaCreacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_campeonato", nullable = false)
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "equipos" })
     private Campeonato campeonato;
