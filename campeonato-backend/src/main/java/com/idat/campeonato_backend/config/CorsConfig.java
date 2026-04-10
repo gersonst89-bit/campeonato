@@ -8,23 +8,22 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsConfig {
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // Permite el envío de credenciales/cookies
         config.setAllowCredentials(true);
 
-        // Las URLs exactas permitidas
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("https://campeonato-theta.vercel.app");
+        // 👇 EL CAMBIO CLAVE 👇
+        // Esto permite cualquier origen ("*") pero usando patrones,
+        // lo cual SÍ es compatible con setAllowCredentials(true).
+        config.addAllowedOriginPattern("*");
 
-        // Permite cualquier cabecera y cualquier método (GET, POST, OPTIONS, etc.)
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
-        // Aplica esta regla a TODAS las rutas de tu API
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
