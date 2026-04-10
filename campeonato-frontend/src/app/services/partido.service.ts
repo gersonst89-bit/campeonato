@@ -1,13 +1,13 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Partido, PartidoResponse, PosicionTabla } from '../models/partido';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PartidoService {
 
-    private apiUrl = 'http://localhost:8080/api/partidos';
+    private apiUrl = `${environment.apiUrl}/api/partidos`;
 
     constructor(private http: HttpClient) { }
 
@@ -34,7 +34,7 @@ export class PartidoService {
     update(id: number, data: any): Observable<any> {
         return this.http.put<any>(`${this.apiUrl}/${id}`, data);
     }
-    
+
     delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
